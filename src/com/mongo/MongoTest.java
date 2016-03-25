@@ -59,6 +59,7 @@ public class MongoTest {
 
     private static void FindOrQueryDataWithJavaDriver() {
         // Query for All Documents in a Collection
+        System.out.println("Query for All Documents in a Collection: ");
         // To return all documents in a collection, call the find method without a criteria document. For example, the
         // following operation queries for all documents in the restaurants collection.
         FindIterable<Document> iterable = db.getCollection("restaurants").find();
@@ -89,6 +90,28 @@ public class MongoTest {
         // Using the static Filters helper(s), you can also specify the query as follows:
         for (Document document : db.getCollection("restaurants").find(eq("borough", "Manhattan"))) {
             System.out.println(document);
+        }
+
+        System.out.println("\n==========================================\n");
+
+        // Query by a Field in an Embedded Document
+        // To specify a condition on a field within an embedded document, use the dot notation. Dot notation requires
+        // quotes around the whole dotted field name. The following operation specifies an equality condition on the
+        // zipcode field in the address embedded document.
+        System.out.println("Query by a Field in an Embedded Document:");
+        iterable = db.getCollection("restaurants").find(
+                new Document("address.zipcode", "10075"));
+        // Iterate the results and apply a block to each resulting document.
+        iterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document);
+            }
+        });
+        System.out.println("--------------------------------------------");
+        // Using the static Filters helper(s), you can also specify the query as follows:
+        for (Document restaurants : db.getCollection("restaurants").find(eq("address.zipcode", "10075"))) {
+            System.out.println(restaurants);
         }
     }
 }
