@@ -1,6 +1,8 @@
 package com.mongo;
 
+import com.mongodb.Block;
 import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 
 import org.bson.Document;
@@ -18,12 +20,14 @@ public class MongoTest {
     static MongoDatabase db = mongoClient.getDatabase("test");
 
     public static void main(String[] args) {
-        try {
-            // Insert a Document
-            InsertADocument();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            // Insert a Document
+//            InsertADocument();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+
+        FindOrQueryDataWithJavaDriver();
     }
 
     private static void InsertADocument() throws ParseException {
@@ -48,5 +52,16 @@ public class MongoTest {
                                         .append("score", 17)))
                         .append("name", "Vella")
                         .append("restaurant_id", "41704620"));
+    }
+
+    private static void FindOrQueryDataWithJavaDriver() {
+        // Query for All Documents in a Collection
+        FindIterable<Document> iterable = db.getCollection("restaurants").find();
+        iterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document);
+            }
+        });
     }
 }
