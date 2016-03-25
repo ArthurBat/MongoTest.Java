@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import static com.mongodb.client.model.Filters.eq;
 import static java.util.Arrays.asList;
 
 public class MongoTest {
@@ -63,5 +64,21 @@ public class MongoTest {
                 System.out.println(document);
             }
         });
+
+        // Query by a Top Level Field
+        System.out.println("\n==========================================\n");
+        System.out.println("Query by a Top Level Field:");
+        iterable = db.getCollection("restaurants").find(
+                new Document("borough", "Manhattan"));
+        iterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document);
+            }
+        });
+        System.out.println("--------------------------------------------");
+        for (Document document : db.getCollection("restaurants").find(eq("borough", "Manhattan"))) {
+            System.out.println(document);
+        }
     }
 }
