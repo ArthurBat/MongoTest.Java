@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Sorts.ascending;
 import static java.util.Arrays.asList;
 
 public class MongoTest {
@@ -229,5 +230,32 @@ public class MongoTest {
         for (Document document : db.getCollection("restaurants").find(or(eq("cuisine", "Italian"), eq("address.zipcode", "10075")))) {
             System.out.println(document);
         }
+
+        System.out.println("\n==========================================\n");
+        System.out.println("\n==========================================\n");
+
+        // Sort Query Results
+        // To specify an order for the result set, append the sort() method to the query. Pass to sort() method a
+        // document which contains the field(s) to sort by and the corresponding sort type, e.g. 1 for ascending and
+        // -1 for descending.
+        // For example, the following operation returns all documents in the restaurants collection, sorted first by
+        // the borough field in ascending order, and then, within each borough, by the "address.zipcode" field in
+        // ascending order:
+        System.out.println("Sort Query Results:");
+        iterable = db.getCollection("restaurants").find()
+                .sort(new Document("borough", 1).append("address.zipcode", 1));
+        // Iterate the results and apply a block to each resulting document
+        iterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document);
+            }
+        });
+        System.out.println("--------------------------------------------");
+        // Using the static Sorts helper(s), you can also specify the query as follows:
+        for (Document document : db.getCollection("restaurants").find().sort(ascending("borough", "address.zipcode"))) {
+            System.out.println(document);
+        }
+        // The operation returns the results sorted in the specified order.
     }
 }
