@@ -32,6 +32,8 @@ public class MongoTest {
     }
 
     private static void InsertADocument() throws ParseException {
+        // To specify a document, use the org.bson.Document class.
+        // The method does not return a result.
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
         db.getCollection("restaurants").insertOne(
                 new Document("address",
@@ -57,7 +59,11 @@ public class MongoTest {
 
     private static void FindOrQueryDataWithJavaDriver() {
         // Query for All Documents in a Collection
+        // To return all documents in a collection, call the find method without a criteria document. For example, the
+        // following operation queries for all documents in the restaurants collection.
         FindIterable<Document> iterable = db.getCollection("restaurants").find();
+        // Iterate the results and apply a block to each resulting document.
+        // The result set contains all documents in the restaurants collection.
         iterable.forEach(new Block<Document>() {
             @Override
             public void apply(final Document document) {
@@ -65,11 +71,14 @@ public class MongoTest {
             }
         });
 
-        // Query by a Top Level Field
         System.out.println("\n==========================================\n");
+
+        // Query by a Top Level Field
+        // The following operation finds documents whose borough field equals "Manhattan".
         System.out.println("Query by a Top Level Field:");
         iterable = db.getCollection("restaurants").find(
                 new Document("borough", "Manhattan"));
+        // Iterate the results and apply a block to each resulting document.
         iterable.forEach(new Block<Document>() {
             @Override
             public void apply(final Document document) {
@@ -77,6 +86,7 @@ public class MongoTest {
             }
         });
         System.out.println("--------------------------------------------");
+        // Using the static Filters helper(s), you can also specify the query as follows:
         for (Document document : db.getCollection("restaurants").find(eq("borough", "Manhattan"))) {
             System.out.println(document);
         }
