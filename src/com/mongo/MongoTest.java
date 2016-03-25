@@ -12,9 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.gt;
-import static com.mongodb.client.model.Filters.lt;
+import static com.mongodb.client.model.Filters.*;
 import static java.util.Arrays.asList;
 
 public class MongoTest {
@@ -183,6 +181,30 @@ public class MongoTest {
         // Using the static Filters helper(s), you can also specify the query as follows:
         for (Document restaurants : db.getCollection("restaurants").find(lt("grades.score", 10))) {
             System.out.println(restaurants);
+        }
+
+        System.out.println("\n==========================================\n");
+
+        // Combine Conditions
+
+        // Logical AND
+        // You can specify a logical conjunction (AND) for multiple query conditions by appending conditions to the
+        // query document. See the append method in the org.bson.Document class.
+        System.out.println("Logical AND:");
+        iterable = db.getCollection("restaurants").find(
+                new Document("cuisine", "Italian").append("address.zipcode", "10075"));
+        // The result set includes only the documents that matched all specified criteria.
+        // Iterate the results and apply a block to each resulting document.
+        iterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document);
+            }
+        });
+        System.out.println("--------------------------------------------");
+        // Using the static Filters helper(s), you can also specify the query as follows:
+        for (Document document : db.getCollection("restaurants").find(and(eq("cuisine", "Italian"), eq("address.zipcode", "10075")))) {
+            System.out.println(document);
         }
     }
 }
