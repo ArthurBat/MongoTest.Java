@@ -184,6 +184,7 @@ public class MongoTest {
         }
 
         System.out.println("\n==========================================\n");
+        System.out.println("\n==========================================\n");
 
         // Combine Conditions
 
@@ -204,6 +205,28 @@ public class MongoTest {
         System.out.println("--------------------------------------------");
         // Using the static Filters helper(s), you can also specify the query as follows:
         for (Document document : db.getCollection("restaurants").find(and(eq("cuisine", "Italian"), eq("address.zipcode", "10075")))) {
+            System.out.println(document);
+        }
+
+        System.out.println("\n==========================================\n");
+
+        // Logical OR
+        // You can specify a logical disjunction (OR) for a list of query conditions by using the $or query operator.
+        System.out.println("Logical OR:");
+        iterable = db.getCollection("restaurants").find(
+                new Document("$or", asList(new Document("cuisine", "Italian"),
+                        new Document("address.zipcode", "10075"))));
+        // The result set includes only the documents that match either conditions.
+        // Iterate the results and apply a block to each resulting document.
+        iterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document);
+            }
+        });
+        System.out.println("--------------------------------------------");
+        // Using the static Filters helper(s), you can also specify the query as follows:
+        for (Document document : db.getCollection("restaurants").find(or(eq("cuisine", "Italian"), eq("address.zipcode", "10075")))) {
             System.out.println(document);
         }
     }
