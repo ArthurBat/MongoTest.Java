@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.gt;
+import static com.mongodb.client.model.Filters.lt;
 import static java.util.Arrays.asList;
 
 public class MongoTest {
@@ -73,6 +75,9 @@ public class MongoTest {
         });
 
         System.out.println("\n==========================================\n");
+        System.out.println("\n==========================================\n");
+
+        // Specify Equality Conditions
 
         // Query by a Top Level Field
         // The following operation finds documents whose borough field equals "Manhattan".
@@ -135,6 +140,49 @@ public class MongoTest {
         // Using the static Filters helper(s), you can also specify the query as follows:
         for (Document document : db.getCollection("restaurants").find(eq("grades.grade", "B"))) {
             System.out.println(document);
+        }
+
+        System.out.println("\n==========================================\n");
+        System.out.println("\n==========================================\n");
+
+        // Specify Conditions with Operators
+
+        // Greater Than Operator ($gt)
+        // Query for documents whose grades array contains an embedded document with a field score greater than 30.
+        System.out.println("Greater Than Operator ($gt):");
+        iterable = db.getCollection("restaurants").find(
+                new Document("grades.score", new Document("$gt", 30)));
+        // Iterate the results and apply a block to each resulting document.
+        iterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document);
+            }
+        });
+        System.out.println("--------------------------------------------");
+        // Using the static Filters helper(s), you can also specify the query as follows:
+        for (Document restaurants : db.getCollection("restaurants").find(gt("grades.score", 30))) {
+            System.out.println(restaurants);
+        }
+
+        System.out.println("\n==========================================\n");
+
+        // Less Than Operator ($lt)
+        // Query for documents whose grades array contains an embedded document with a field score less than 10.
+        System.out.println("Less Than Operator ($lt):");
+        iterable = db.getCollection("restaurants").find(
+                new Document("grades.score", new Document("$lt", 10)));
+        // Iterate the results and apply a block to each resulting document.
+        iterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document);
+            }
+        });
+        System.out.println("--------------------------------------------");
+        // Using the static Filters helper(s), you can also specify the query as follows:
+        for (Document restaurants : db.getCollection("restaurants").find(lt("grades.score", 10))) {
+            System.out.println(restaurants);
         }
     }
 }
