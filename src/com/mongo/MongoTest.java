@@ -113,5 +113,28 @@ public class MongoTest {
         for (Document restaurants : db.getCollection("restaurants").find(eq("address.zipcode", "10075"))) {
             System.out.println(restaurants);
         }
+
+        System.out.println("\n==========================================\n");
+
+        // Query by a Field in an Array
+        // The grades array contains embedded documents as its elements. To specify a condition on a field in these
+        // documents, use the dot notation. Dot notation requires quotes around the whole dotted field name. The
+        // following queries for documents whose grades array contains an embedded document with a field grade equal
+        // to "B".
+        System.out.println("Query by a Field in an Array:");
+        iterable = db.getCollection("restaurants").find(
+                new Document("grades.grade", "B"));
+        // Iterate the results and apply a block to each resulting document.
+        iterable.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                System.out.println(document);
+            }
+        });
+        System.out.println("--------------------------------------------");
+        // Using the static Filters helper(s), you can also specify the query as follows:
+        for (Document document : db.getCollection("restaurants").find(eq("grades.grade", "B"))) {
+            System.out.println(document);
+        }
     }
 }
